@@ -7,69 +7,60 @@
 //
 
 #import "RecipeWithImage.h"
-#import "RecipesTVC.h"
-#import "Recipe+Cat.h"
-#import "UIViewController+Context.h"
-#import "AppDelegate.h"
 
 
 @interface RecipeWithImage ()
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *saveButton;
-
+@property (nonatomic, assign) NSInteger recipeRow;
 @end
 
 @implementation RecipeWithImage
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (self.recipeSaved) {
-        self.saveButton.title = @"Delete";
-    }else self.saveButton.title = @"Save";
-    
-    self.textViewForRecipe.text = [NSString stringWithFormat:@"%@", self.ingredientsLines];
-    
-    [[SDWebImageDownloader sharedDownloader]downloadImageWithURL:[NSURL URLWithString:self.imageLink] options:SDWebImageDownloaderLowPriority
-                                                        progress:nil
-                                                       completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-                                                           
-                                                           [self.imageForDish setBackgroundColor:[UIColor colorWithPatternImage:image]];
-                                                       }];
-    
+    self.recipeRow = self.recipeIndex.row;
+    [self setRecipeWithImageContents:self.recipeRow];
 }
 
-- (IBAction)saveRecipeToCoreData:(UIBarButtonItem *)sender {
-    
-    if (self.recipeDict) {
-        if (!self.recipeSaved){
-            [Recipe createRecipeWithInfo:self.recipeDict inManagedObiectContext:self.currentContext];
-            self.recipeSaved = YES;
-            sender.title = @"Delete";
-        }else{
-            [Recipe deleteRecipeWithInfo:self.recipeDict from:self.currentContext];
-            self.recipeSaved = NO;
-            sender.title = @"Save";
-        }
-    }else{
-        if (!self.recipeSaved) {
-            [Recipe saveRecipe:self.recipe inManagedObjectContext:self.currentContext];
-            self.recipeSaved = YES;
-            sender.title = @"Delete";
-        }else{
-            [Recipe deleteRecipe:self.recipe fromManagedObjectContext:self.currentContext];
-            self.recipeSaved = NO;
-            sender.title = @"Save";
-        }
-    }
-    
+- (void) setRecipeWithImageContents:(NSInteger)recipeIndexPath
+{
+    _imageLink = self.avaivableRecipes[recipeIndexPath][@"recipe"][@"image"];
+    _ingredientsLines = self.avaivableRecipes[recipeIndexPath][@"recipe"][@"ingredientLines"];
+    self.textViewForRecipe.text = [NSString stringWithFormat:@"%@", _ingredientsLines];
+    [[SDWebImageDownloader sharedDownloader]downloadImageWithURL:[NSURL URLWithString:_imageLink] options:SDWebImageDownloaderLowPriority progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+        [self.imageForDish setBackgroundColor:[UIColor colorWithPatternImage:image]];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+
+}
+
+
+- (IBAction)goToNextCell:(id)sender {
+
+    ++self.recipeRow;
+    //костиль, треба зробити універсальний (!self.recipeRow) i td
+    if(self.recipeRow == self.avaivableRecipes.count){
+        self.recipeRow = 0;
+        [self setRecipeWithImageContents:self.recipeRow];
+    }else{
+        [self setRecipeWithImageContents:self.recipeRow];
+    }
+
     
 }
 
+- (IBAction)goToPreviousCell:(id)sender {
+    --self.recipeRow;
+    if (self.recipeRow == -1){
+        self.recipeRow = self.avaivableRecipes.count - 1;
+        [self setRecipeWithImageContents:self.recipeRow];
+    }else{
+        [self setRecipeWithImageContents:self.recipeRow];
+    }
+
+}
 
 @end

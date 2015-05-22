@@ -9,11 +9,10 @@
 #import "SearchViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
-#import "VKSdk.h"
 #import <GoogleOpenSource/GTLPlusConstants.h>
 #import <GooglePlus/GPPSignInButton.h>
 
-static NSString * const vkAppID = @"4921324";
+
 static NSString * const kClientID = @"479226462698-nuoqkaoi6c79be4ghh4he3ov05bb1kpc.apps.googleusercontent.com";
 
 
@@ -28,11 +27,13 @@ static NSString * const kClientID = @"479226462698-nuoqkaoi6c79be4ghh4he3ov05bb1
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     GPPSignIn *signIn = [GPPSignIn sharedInstance];
     signIn.clientID = kClientID;
     signIn.scopes = [NSArray arrayWithObjects:
                      kGTLAuthScopePlusLogin,nil];
     signIn.delegate = self;
+
     
     FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
     
@@ -40,6 +41,7 @@ static NSString * const kClientID = @"479226462698-nuoqkaoi6c79be4ghh4he3ov05bb1
     
     [self.view addSubview:loginButton];
     [signIn trySilentAuthentication];
+
 }
 
 - (void)finishedWithAuth: (GTMOAuth2Authentication *)auth
@@ -53,13 +55,7 @@ static NSString * const kClientID = @"479226462698-nuoqkaoi6c79be4ghh4he3ov05bb1
     }
 }
 
--(void) vkSdkReceivedNewToken:(VKAccessToken*) newToken{
-    
-}
 
--(void) vkSdkUserDeniedAccess:(VKError*) authorizationError {
-    
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -106,18 +102,8 @@ static NSString * const kClientID = @"479226462698-nuoqkaoi6c79be4ghh4he3ov05bb1
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 
-    if ([segue.identifier isEqualToString:@"SegueToRecipesTVC"]){
-       
-        RecipesTVC *newController = segue.destinationViewController;
-        newController.query = [NSString stringWithString: self.searchTextField.text];
-        newController.dataSource = @"Search results";
-    }
-    if ([segue.identifier isEqualToString:@"SegueToMyRecipes"]){
-        RecipesTVC *newController = segue.destinationViewController;
-        newController.query = [NSString stringWithString: self.searchTextField.text];
-        newController.dataSource = @"My recipes";
-        newController.selectDataSourceButton.selectedSegmentIndex = 1;
-    }
+        RecipesTableViewController *newController = segue.destinationViewController;
+        newController.myLink = [self.searchTextField.text stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 }
 
 @end

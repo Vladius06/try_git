@@ -4,35 +4,20 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-AFNetworking.xcscheme</key>
+		<key>iFridge.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods-SDWebImage.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
+			<key>orderHint</key>
+			<integer>0</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>130383C33B958966201E0822</key>
+		<key>357A58EC1AFFDF3C0094B0AC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3A81936F619845CAA6567295</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C71C2B224DFFB199AADB29D6</key>
+		<key>357A59081AFFDF3D0094B0AC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
